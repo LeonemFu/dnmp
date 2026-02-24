@@ -13,10 +13,13 @@ RUN sed -i "s|deb.debian.org|${DEBIAN_MIRROR_DOMAIN}|g" /etc/apt/sources.list.d/
 # Install required packages
 RUN export option="--no-install-recommends -y" \
     && apt-get $option update \
-    && apt-get $option install tzdata curl
+    && apt-get $option install tzdata curl bash-completion
 
 # Clean up the package list to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Enable bash completion for interactive shells
+RUN echo 'if [ -f /etc/bash_completion ]; then . /etc/bash_completion; fi' >> /etc/bash.bashrc
 
 # Install PHP extensions
 RUN curl -sSLf -o /usr/local/bin/install-php-extensions https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions \
