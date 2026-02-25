@@ -170,6 +170,23 @@ services:
       MYSQL_ROOT_PASSWORD: "${MYSQL5_ROOT_PASSWORD}"
       MYSQL_ROOT_HOST: "${MYSQL5_ROOT_HOST}"
       TZ: "$TZ"
+  clickhouse:
+    image: clickhouse/clickhouse-server:${CLICKHOUSE_VERSION}
+    container_name: clickhouse
+    ports:
+      - "${CLICKHOUSE_HTTP_HOST_PORT}:8123"
+      - "${CLICKHOUSE_TCP_HOST_PORT}:9000"
+    volumes:
+      - ${CLICKHOUSE_CONF_DIR}/config.d:/etc/clickhouse-server/config.d:rw
+      - ${CLICKHOUSE_CONF_DIR}/users.d:/etc/clickhouse-server/users.d:rw
+      - ${CLICKHOUSE_DATA_DIR}:/var/lib/clickhouse/:rw
+    restart: always
+    environment:
+      CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
+      CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+      TZ: "$TZ"
+    networks:
+      - default
 
 #  openresty:
 #    image:  openresty/openresty:${OPENRESTY_VERSION}
